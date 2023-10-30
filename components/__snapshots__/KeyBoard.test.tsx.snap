@@ -33,7 +33,8 @@ exports[`keyboard > should be render 1`] = `
       <li
         class="ml-auto"
       >
-        金额：
+        ¥
+         
         <span
           class="text-base"
           data-testid="value"

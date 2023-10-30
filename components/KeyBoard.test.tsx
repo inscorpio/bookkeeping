@@ -20,6 +20,15 @@ describe('keyboard', () => {
       await fireEvent.click(screen.getByText('2'))
       expect(screen.getByTestId(testId).innerHTML).toBe('12')
     })
+
+    it('should be guaranteed to have two decimal places', async () => {
+      await fireEvent.click(screen.getByText('1'))
+      await fireEvent.click(screen.getByText('.'))
+      await fireEvent.click(screen.getByText('2'))
+      await fireEvent.click(screen.getByText('3'))
+      await fireEvent.click(screen.getByText('4'))
+      expect(screen.getByTestId(testId).innerHTML).toBe('1.23')
+    })
   })
 
   describe('click dot', () => {
@@ -51,6 +60,20 @@ describe('keyboard', () => {
 
       await fireEvent.click(screen.getByTestId('icon-backspace').parentElement!)
       expect(screen.getByTestId(testId).innerHTML).toBe('1')
+    })
+
+    it('should reset value to initial value when value is empty', async () => {
+      await fireEvent.click(screen.getByText('1'))
+
+      expect(screen.getByTestId(testId).innerHTML).toBe('1')
+
+      await fireEvent.click(screen.getByTestId('icon-backspace').parentElement!)
+      expect(screen.getByTestId(testId).innerHTML).toBe('0')
+    })
+
+    it('should not change value when value is initial value', async () => {
+      await fireEvent.click(screen.getByTestId('icon-backspace').parentElement!)
+      expect(screen.getByTestId(testId).innerHTML).toBe('0')
     })
   })
 })

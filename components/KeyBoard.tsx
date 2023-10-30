@@ -36,7 +36,8 @@ export default function Keyboard() {
           <span className="mt-[2px]">今天</span>
         </li>
         <li className="ml-auto">
-          金额：
+          ¥
+          {' '}
           <span className="text-base" data-testid="value">
             {value}
           </span>
@@ -61,14 +62,23 @@ export default function Keyboard() {
   )
 
   function handleType(v: string | number | JSX.Element) {
-    if (typeof v === 'number')
-      setValue(value !== initialValue ? `${value}${v}` : `${v}`)
+    if (typeof v === 'number') {
+      handleNumber(v)
+    }
     else if (typeof v === 'string') {
       handleDot(v)
     }
     else {
       handleIcon(v)
     }
+  }
+
+  function handleNumber(v: number) {
+    if (value.includes('.')) {
+      if (/\.(\d*)/.exec(value)?.[1].length === 2)
+        return
+    }
+    setValue(value !== initialValue ? `${value}${v}` : `${v}`)
   }
 
   function handleDot(v: string) {
@@ -84,7 +94,10 @@ export default function Keyboard() {
       setValue(initialValue)
     }
     else if (v.type.name === 'FiDelete') {
+      if (value === initialValue)
+        return
       setValue(value.slice(0, -1))
+      setValue(v => v || initialValue)
     }
   }
 }
