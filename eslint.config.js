@@ -9,6 +9,7 @@ module.exports = antfu(
   {
     rules: {
       'test/consistent-test-it': 'off',
+      'test/prefer-lowercase-title': 'off',
     },
   },
 )
