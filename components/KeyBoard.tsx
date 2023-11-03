@@ -1,14 +1,20 @@
 'use client'
 
+import type { ReactNode } from 'react'
 import { useState } from 'react'
-import {
-  AiOutlineCalendar,
-  AiOutlineClear,
-} from 'react-icons/ai'
+import { AiOutlineClear } from 'react-icons/ai'
 import { FiDelete } from 'react-icons/fi'
 import { normalizeClassName } from '~/utils'
 
-export default function Keyboard() {
+interface Props {
+  children?: ReactNode
+}
+
+export default function Keyboard(
+  {
+    children,
+  }: Props,
+) {
   const squares = [
     1,
     2,
@@ -31,10 +37,7 @@ export default function Keyboard() {
   return (
     <div className="space-y-2">
       <ul className="flex items-center gap-2 p-2 w-full text-xs bg-white">
-        <li className="flex items-center gap-1">
-          <AiOutlineCalendar size="1.2em" />
-          <span className="mt-[2px]">今天</span>
-        </li>
+        {children}
         <li className="ml-auto">
           ¥
           {' '}

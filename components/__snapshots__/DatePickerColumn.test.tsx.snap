@@ -1,0 +1,40 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`render 1`] = `
+<div>
+  <li
+    class="flex flex-col items-center overflow-hidden"
+  >
+    <span
+      style="transform: translateY(0px);"
+    />
+    <span
+      style="transform: translateY(0px);"
+    />
+    <span
+      style="transform: translateY(0px);"
+    />
+    <span
+      style="transform: translateY(0px);"
+    />
+    <span
+      style="transform: translateY(0px);"
+    />
+    <span
+      style="transform: translateY(0px);"
+    />
+    <span
+      style="transform: translateY(0px);"
+    />
+    <span
+      style="transform: translateY(0px);"
+    />
+    <span
+      style="transform: translateY(0px);"
+    />
+    <span
+      style="transform: translateY(0px);"
+    />
+  </li>
+</div>
+`;

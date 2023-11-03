@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'jsdom',
-    setupFiles: './vitest-setup.ts',
+    setupFiles: ['./vitest-setup.ts', './tests-setup.ts'],
     alias: {
       '~': path.resolve(__dirname, './'),
     },

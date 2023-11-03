@@ -6,14 +6,14 @@ import { AiOutlineHome, AiOutlinePlus, AiOutlineSetting } from 'react-icons/ai'
 export default function Home() {
   const router = useRouter()
   return (
-    <div className='w-full h-full pt-6'>
+    <div className='flex flex-col w-full h-full pt-6'>
       <header className='px-4'>
         <h1 className='text-4xl font-bold'>主页</h1>
       </header>
-      <main className='p-4'>
+      <main className='flex-1 p-4'>
         hello bookkeeping
       </main>
-      <footer className="fixed bottom-0 left-0 w-full">
+      <footer className="w-full">
         <nav className="flex items-center border-t border-t-stone-100">
           <a className="flex justify-center items-center flex-1 text-center h-10 leading-10">
             <AiOutlineHome size="2em" />
