@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { AiOutlineCalendar } from 'react-icons/ai'
 import { IoIosArrowBack } from 'react-icons/io'
+import Category from '~/app/create/Category'
 import DatePicker from '~/components/DatePicker'
 import Keyboard from '~/components/KeyBoard'
 import { normalizeDate } from '~/utils'
@@ -24,7 +25,9 @@ export default function Create() {
             <IoIosArrowBack size="1.5em" />
           </button>
         </nav>
-        <div className="flex-1"></div>
+        <div className="flex-1">
+          <Category />
+        </div>
         <Keyboard>
           <li
             className="flex items-center gap-1"
