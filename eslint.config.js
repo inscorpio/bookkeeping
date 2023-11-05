@@ -12,4 +12,9 @@ module.exports = antfu(
       'test/prefer-lowercase-title': 'off',
     },
   },
+  {
+    rules: {
+      'node/prefer-global/process': 'off',
+    },
+  },
 )
