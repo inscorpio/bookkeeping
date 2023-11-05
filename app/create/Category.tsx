@@ -2,34 +2,51 @@ import { useState } from 'react'
 import { AiOutlineSetting } from 'react-icons/ai'
 import { normalizeClassName } from '~/utils'
 
-export default function Category() {
-  const [categories, setCategories] = useState([
+export interface CategoryItem {
+  id: number
+  label: string
+  icon: string
+  select: boolean
+}
+
+interface Props {
+  onSelect: (id: number) => void
+}
+
+export default function Category({ onSelect }: Props) {
+  const [categories, setCategories] = useState<CategoryItem[]>([
     {
+      id: 1,
       label: '三餐',
       icon: '',
       select: true,
     },
     {
+      id: 2,
       label: '饮料',
       icon: '',
       select: false,
     },
     {
+      id: 3,
       label: '外卖',
       icon: '',
       select: false,
     },
     {
+      id: 4,
       label: '零食',
       icon: '',
       select: false,
     },
     {
+      id: 5,
       label: '日常',
       icon: '',
       select: false,
     },
     {
+      id: 6,
       label: '购物',
       icon: '',
       select: false,
@@ -52,6 +69,7 @@ export default function Category() {
                   }
                 })
                 setCategories(_categories)
+                onSelect(v.id)
               }}
             >
               {v.label}

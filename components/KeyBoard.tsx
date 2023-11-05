@@ -8,11 +8,13 @@ import { normalizeClassName } from '~/utils'
 
 interface Props {
   children?: ReactNode
+  onSave: (amount: number) => void
 }
 
 export default function Keyboard(
   {
     children,
+    onSave,
   }: Props,
 ) {
   const squares = [
@@ -31,8 +33,8 @@ export default function Keyboard(
     0,
     '.',
   ]
-  const initialValue = '0'
-  const [value, setValue] = useState(initialValue)
+  const initialAmount = '0'
+  const [amount, setAmount] = useState(initialAmount)
 
   return (
     <div className="space-y-2">
@@ -42,7 +44,7 @@ export default function Keyboard(
           ¥
           {' '}
           <span className="text-base" data-testid="value">
-            {value}
+            {amount}
           </span>
         </li>
       </ul>
@@ -52,7 +54,7 @@ export default function Keyboard(
             return (
               <li
                 key={i}
-                className={normalizeClassName('flex justify-center items-center py-2 rounded-sm bg-white', v !== '保存' ? 'text-base' : 'row-span-3')}
+                className={normalizeClassName('flex justify-center items-center py-2 rounded-sm bg-white', !isSave(v) ? 'text-base' : 'row-span-3')}
                 onClick={() => handleType(v)}
               >
                 {v}
@@ -70,37 +72,48 @@ export default function Keyboard(
     }
     else if (typeof v === 'string') {
       handleDot(v)
+      handleSave(v)
     }
     else {
       handleIcon(v)
     }
   }
 
+  function isSave(v: unknown) {
+    return v === '保存'
+  }
+
+  function handleSave(v: string) {
+    if (isSave(v)) {
+      onSave(+amount)
+    }
+  }
+
   function handleNumber(v: number) {
-    if (value.includes('.')) {
-      if (/\.(\d*)/.exec(value)?.[1].length === 2)
+    if (amount.includes('.')) {
+      if (/\.(\d*)/.exec(amount)?.[1].length === 2)
         return
     }
-    setValue(value !== initialValue ? `${value}${v}` : `${v}`)
+    setAmount(amount !== initialAmount ? `${amount}${v}` : `${v}`)
   }
 
   function handleDot(v: string) {
     if (v === '.') {
-      if (value.includes('.'))
+      if (amount.includes('.'))
         return
-      setValue(`${value}.`)
+      setAmount(`${amount}.`)
     }
   }
 
   function handleIcon(v: JSX.Element) {
     if (v.type.name === 'AiOutlineClear') {
-      setValue(initialValue)
+      setAmount(initialAmount)
     }
     else if (v.type.name === 'FiDelete') {
-      if (value === initialValue)
+      if (amount === initialAmount)
         return
-      setValue(value.slice(0, -1))
-      setValue(v => v || initialValue)
+      const _amount = amount.slice(0, -1) || initialAmount
+      setAmount(_amount)
     }
   }
 }

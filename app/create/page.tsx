@@ -1,5 +1,6 @@
 'use client'
 
+import dayjs from 'dayjs'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { AiOutlineCalendar } from 'react-icons/ai'
@@ -11,9 +12,9 @@ import { normalizeDate } from '~/utils'
 
 export default function Create() {
   const router = useRouter()
+  let categoryId: number
   const [visible, setVisible] = useState(false)
   const [date, setDate] = useState(new Date())
-
   return (
     <>
       <div className="flex flex-col w-full h-full pt-4 bg-stone-100">
@@ -26,9 +27,23 @@ export default function Create() {
           </button>
         </nav>
         <div className="flex-1">
-          <Category />
+          <Category onSelect={(id) => {
+            categoryId = id
+          }}
+          />
         </div>
-        <Keyboard>
+        <Keyboard
+          onSave={(amount) => {
+            const form = {
+              categoryId,
+              amount,
+              date: dayjs(date).unix(),
+            }
+            // eslint-disable-next-line no-console
+            console.log(form)
+            // TODO: call API
+          }}
+        >
           <li
             className="flex items-center gap-1"
             onClick={toggleDialog}
