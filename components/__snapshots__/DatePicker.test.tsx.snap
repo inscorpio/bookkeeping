@@ -3,7 +3,7 @@
 exports[`echo after comfirm 1`] = `
 <div>
   <dialog
-    class="w-screen max-w-none m-0 mt-auto text-stone-950 outline-none"
+    class="max-w-md w-full mb-0 text-stone-950 outline-none select-none"
   >
     <div
       class="flex flex-col w-full h-[248px] py-3"
@@ -368,7 +368,7 @@ exports[`echo after comfirm 1`] = `
 exports[`render 1`] = `
 <div>
   <dialog
-    class="w-screen max-w-none m-0 mt-auto text-stone-950 outline-none"
+    class="max-w-md w-full mb-0 text-stone-950 outline-none select-none"
   >
     <div
       class="flex flex-col w-full h-[248px] py-3"

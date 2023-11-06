@@ -32,7 +32,7 @@ export default function Dialog(
   return (
     <dialog
       ref={dialogRef}
-      className="w-screen max-w-none m-0 mt-auto text-stone-950 outline-none"
+      className="max-w-md w-full mb-0 text-stone-950 outline-none select-none"
     >
       <div className="flex flex-col w-full h-[248px] py-3">
         <div className="flex justify-between items-center px-3">
