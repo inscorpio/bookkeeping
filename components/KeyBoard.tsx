@@ -1,10 +1,10 @@
 'use client'
 
+import clsx from 'clsx'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { AiOutlineClear } from 'react-icons/ai'
 import { FiDelete } from 'react-icons/fi'
-import { normalizeClassName } from '~/utils'
 
 interface Props {
   children?: ReactNode
@@ -54,7 +54,10 @@ export default function Keyboard(
             return (
               <li
                 key={i}
-                className={normalizeClassName('flex justify-center items-center py-2 rounded-sm bg-white', !isSave(v) ? 'text-base' : 'row-span-3')}
+                className={clsx(
+                  'flex justify-center items-center py-2 rounded-sm bg-white',
+                  !isSave(v) ? 'text-base' : 'row-span-3',
+                )}
                 onClick={() => handleType(v)}
               >
                 {v}

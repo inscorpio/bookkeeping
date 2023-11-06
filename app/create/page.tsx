@@ -1,72 +1,57 @@
 'use client'
-
-import dayjs from 'dayjs'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { AiOutlineCalendar } from 'react-icons/ai'
-import { IoIosArrowBack } from 'react-icons/io'
+import { useEffect, useState } from 'react'
+import type { CategoryItem as ICategoryItem } from '~/app/create/Category'
 import Category from '~/app/create/Category'
-import DatePicker from '~/components/DatePicker'
-import Keyboard from '~/components/KeyBoard'
-import { normalizeDate } from '~/utils'
+import KeyboardInput from '~/app/create/KeyboardInput'
+import Nav from '~/app/create/Nav'
 
-export default function Create() {
-  const router = useRouter()
-  let categoryId: number
-  const [visible, setVisible] = useState(false)
-  const [date, setDate] = useState(new Date())
+export default function BillCreatePage() {
+  const [categories, setCategories] = useState<ICategoryItem[]>([])
+  useEffect(() => {
+    (async () => {
+      const res = await fetch('http://localhost:3000/api/category')
+      const { data } = await res.json()
+      const categories = data as ICategoryItem[]
+      setCategories(categories)
+    })()
+  }, [])
+  let categoryId = categories[0]?.id
+  let date = new Date()
+  function handleSelect(id: number): void {
+    categoryId = id
+  }
+  const handleSelectDate = (selectDate: Date): void => {
+    date = selectDate
+  }
+  const handleSave = async (amount: number) => {
+    await fetch(
+      'http://localhost:3000/api/bill',
+      {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          categoryId,
+          date,
+          amount,
+          note: '',
+        }),
+      },
+    )
+  }
+
   return (
-    <>
-      <div className="flex flex-col w-full h-full pt-4 bg-stone-100">
-        <nav className="flex px-3">
-          <button onClick={() => {
-            router.back()
-          }}
-          >
-            <IoIosArrowBack size="1.5em" />
-          </button>
-        </nav>
-        <div className="flex-1">
-          <Category onSelect={(id) => {
-            categoryId = id
-          }}
-          />
-        </div>
-        <Keyboard
-          onSave={(amount) => {
-            const form = {
-              categoryId,
-              amount,
-              date: dayjs(date).unix(),
-            }
-            // eslint-disable-next-line no-console
-            console.log(form)
-            // TODO: call API
-          }}
-        >
-          <li
-            className="flex items-center gap-1"
-            onClick={toggleDialog}
-          >
-            <AiOutlineCalendar size="1.2em" />
-            <span className="mt-[2px]">{normalizeDate(date)}</span>
-          </li>
-        </Keyboard>
-      </div>
-      <DatePicker
-        visible={visible}
-        value={date}
-        onClose={toggleDialog}
-        onComfirm={handleComfirm}
+    <div className="flex flex-col w-full h-full pt-4 bg-stone-100">
+      <Nav />
+      <Category
+        list={categories}
+        onSelectItem={handleSelect}
       />
-    </>
+      <KeyboardInput
+        onSave={handleSave}
+        onSelectDate={handleSelectDate}
+      />
+    </div>
   )
-
-  function toggleDialog() {
-    setVisible(!visible)
-  }
-
-  function handleComfirm(date: Date) {
-    setDate(date)
-  }
 }
