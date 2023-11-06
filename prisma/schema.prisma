@@ -13,6 +13,7 @@ datasource db {
 model Category {
   id       Int      @id @default(autoincrement())
   createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
   label    String   @unique
   icon     String?
   Bill     Bill[]
@@ -20,8 +21,8 @@ model Category {
 
 model Bill {
   id         Int      @id @default(autoincrement())
-  createAt   DateTime? @default(now())
-  updateAt   DateTime? @updatedAt
+  createAt   DateTime @default(now())
+  updateAt   DateTime @updatedAt
   amount     Int
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId Int
