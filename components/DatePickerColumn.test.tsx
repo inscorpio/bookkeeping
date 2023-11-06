@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { expect, test } from 'vitest'
 import DatePickerColumn, { ITEM_HEIGHT } from '~/components/DatePickerColumn'
 import { touchMoveDown, touchMoveUp } from '~/components/DatePickerColumn.helper'

@@ -21,7 +21,7 @@ export default function Keyboard(
     1,
     2,
     3,
-    <FiDelete data-testid="icon-backspace" />,
+    <FiDelete key="delete" data-testid="icon-backspace" />,
     4,
     5,
     6,
@@ -29,7 +29,7 @@ export default function Keyboard(
     7,
     8,
     9,
-    <AiOutlineClear data-testid="icon-clear" />,
+    <AiOutlineClear key="clear" data-testid="icon-clear" />,
     0,
     '.',
   ]
