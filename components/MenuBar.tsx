@@ -15,7 +15,7 @@ export default function MenuBar() {
       >
         <Link
           href="/create"
-          className="flex justify-center items-center mt-[-15px] w-[50px] h-[50px] border-t border-stone-100 rounded-full bg-stone-950 text-stone-50"
+          className="z-10 flex justify-center items-center mt-[-15px] w-[50px] h-[50px] border-t border-stone-100 rounded-full bg-stone-950 text-stone-50"
         >
           <AiOutlinePlus size="2em" />
         </Link>

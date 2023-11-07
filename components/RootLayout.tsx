@@ -7,7 +7,7 @@ export default function RootLayout({ title, children }: { title: string; childre
       <header className="px-4">
         <h1 className="text-4xl font-bold">{title}</h1>
       </header>
-      <main className="flex-1 p-4">
+      <main className="flex-1 p-4 overflow-y-auto">
         {children}
       </main>
       <footer className="w-full">

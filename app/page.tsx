@@ -1,5 +1,17 @@
 import type { Bill, Category } from '@prisma/client'
 import RootLayout from '~/components/RootLayout'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from '~/components/ui/table'
 import { request } from '~/utils/request'
 
 interface BillGroupByDate {
@@ -12,26 +24,34 @@ export default async function HomePage() {
   // await new Promise(resolve => setTimeout(() => resolve(true), 3000))
   return (
     <RootLayout title="主页">
-      <ul>
+      <div className="flex flex-col gap-4">
         {
           billsGroupByDate.map(group => (
-            <li key={group.date}>
-              {group.date}
-              {
-                  group.bills.map(bill => (
-                    <div key={bill.id}>
-                      <span>
-                        {bill.category.label}
-                        ：
-                      </span>
-                      <span>{bill.amount}</span>
-                    </div>
-                  ))
-                }
-            </li>
+            <Card key={group.date}>
+              <CardHeader className="p-4">
+                <CardTitle className="text-xl">{group.date}</CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 pt-0">
+                <Table>
+                  <TableBody>
+                    {
+                      group.bills.map(bill => (
+                        <TableRow key={bill.id}>
+                          <TableCell>{bill.category.label}</TableCell>
+                          <TableCell>
+                            ¥
+                            {bill.amount}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    }
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
           ))
         }
-      </ul>
+      </div>
     </RootLayout>
   )
 }
