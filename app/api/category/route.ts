@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const validation = CategoryInputSchema.safeParse(body)
     if (!validation.success)
-      return NextResponse.json({ message: validation.error.formErrors.fieldErrors.label?.[0] }, { status: 400 })
+      return NextResponse.json({ message: '参数错误', error: validation.error.format() }, { status: 400 })
 
     const data = await prisma.category.create({
       data: {
@@ -45,5 +45,5 @@ export async function GET(_: NextRequest) {
       label: true,
     },
   })
-  return NextResponse.json(data, { status: 200 })
+  return NextResponse.json({ data }, { status: 200 })
 }

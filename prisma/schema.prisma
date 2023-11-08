@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -23,9 +20,11 @@ model Bill {
   id         Int      @id @default(autoincrement())
   createAt   DateTime @default(now())
   updateAt   DateTime @updatedAt
-  amount     Int
-  category   Category @relation(fields: [categoryId], references: [id])
+  amount     Decimal
   categoryId Int
   date       DateTime
   note       String?
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@index([categoryId], map: "Bill_categoryId_fkey")
 }

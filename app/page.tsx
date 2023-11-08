@@ -1,4 +1,5 @@
 import type { Bill, Category } from '@prisma/client'
+import Amount from '~/components/Amount'
 import RootLayout from '~/components/RootLayout'
 import {
   Card,
@@ -12,7 +13,7 @@ import {
   TableCell,
   TableRow,
 } from '~/components/ui/table'
-import { request } from '~/utils/request'
+import { RequestModule, request } from '~/utils/request'
 
 interface BillGroupByDate {
   date: string
@@ -20,7 +21,7 @@ interface BillGroupByDate {
 }
 
 export default async function HomePage() {
-  const billsGroupByDate = await request<BillGroupByDate[]>('bill')
+  const billsGroupByDate = await request<BillGroupByDate[]>(RequestModule.bill)
   // await new Promise(resolve => setTimeout(() => resolve(true), 3000))
   return (
     <RootLayout title="主页">
@@ -39,8 +40,9 @@ export default async function HomePage() {
                         <TableRow key={bill.id}>
                           <TableCell>{bill.category.label}</TableCell>
                           <TableCell>
-                            ¥
-                            {bill.amount}
+                            <Amount>
+                              {bill.amount}
+                            </Amount>
                           </TableCell>
                         </TableRow>
                       ))

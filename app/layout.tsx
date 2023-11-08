@@ -1,7 +1,7 @@
+import clsx from 'clsx'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import clsx from 'clsx'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,11 +16,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh">
+    <html lang="zh" className="flex justify-center items-center w-screen h-screen">
       <body
         className={clsx(
           inter.className,
-          'text-sm font-mono text-stone-950 max-w-md m-auto bg-stone-200',
+          'flex justify-center items-center rounded-md w-full h-full md:border md:max-w md:max-h text-sm text-stone-950 select-none',
         )}
       >
         {children}
