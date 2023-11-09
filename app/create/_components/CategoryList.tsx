@@ -1,9 +1,9 @@
 'use client'
-import type { Category } from '@prisma/client'
 import { AiOutlineSetting } from 'react-icons/ai'
+import type { CategoryClient } from '~/api/category'
 import { Button } from '~/components/ui/button'
 
-export default function CategoryList({ categories, selectIndex, onSelect }: { categories: Category[]; selectIndex: number; onSelect: (index: number) => void }) {
+export default function CategoryList({ categories, selectIndex, onSelect }: { categories: CategoryClient[]; selectIndex: number; onSelect: (index: number) => void }) {
   return (
     <>
       <ul className="grid grid-cols-4 gap-4 m-4">

@@ -1,5 +1,7 @@
 'use server'
+import type { Bill } from '@prisma/client'
 import { z } from 'zod'
+import type { CategoryClient } from '~/api/category'
 import prisma from '~/prisma/db'
 
 const billCreateSchema = z.object({
@@ -9,6 +11,7 @@ const billCreateSchema = z.object({
 })
 
 export type BillCreate = z.infer<typeof billCreateSchema>
+export type BillClient = Pick<Bill, 'id' | 'amount' | 'date'> & { category: CategoryClient }
 
 export async function requestBillCreate(bill: BillCreate) {
   const validation = billCreateSchema.safeParse(bill)
@@ -35,14 +38,7 @@ export async function requestBillsGroupByDate() {
   `
   const data = []
   for (const { date } of groups) {
-    const bills: {
-      id: number
-      amount: number
-      category: {
-        id: number
-        label: string
-      }
-    }[] = await prisma.$queryRaw`
+    const bills: Omit<BillClient, 'date'>[] = await prisma.$queryRaw`
       SELECT Bill.id, Bill.amount, JSON_OBJECT('id', Category.id, 'label', Category.label) AS category
       FROM Bill
       INNER JOIN Category ON Bill.categoryId = Category.id

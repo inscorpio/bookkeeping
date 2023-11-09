@@ -1,16 +1,16 @@
 'use client'
-import type { Category } from '@prisma/client'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { IoIosArrowBack } from 'react-icons/io'
 import { requestBillCreate } from '~/api/bill'
+import type { CategoryClient } from '~/api/category'
 import ActionBar from '~/app/create/_components/ActionBar'
 import CategoryList from '~/app/create/_components/CategoryList'
 import KeyBoard from '~/app/create/_components/KeyBoard'
 import { useToast } from '~/components/ui/use-toast'
 
-export default function BillCreate({ categories }: { categories: Category[] }) {
+export default function BillCreate({ categories }: { categories: CategoryClient[] }) {
   const [date, setDate] = useState<Date | undefined>(new Date())
   const [amount, setAmount] = useState('0')
   const [selectIndex, setSelectIndex] = useState(0)
