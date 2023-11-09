@@ -1,33 +1,33 @@
 'use client'
 import type { Category } from '@prisma/client'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { IoIosArrowBack } from 'react-icons/io'
+import { requestBillCreate } from '~/api/bill'
 import ActionBar from '~/app/create/_components/ActionBar'
 import CategoryList from '~/app/create/_components/CategoryList'
 import KeyBoard from '~/app/create/_components/KeyBoard'
-import { RequestModule, request } from '~/utils'
+import { useToast } from '~/components/ui/use-toast'
 
 export default function BillCreate({ categories }: { categories: Category[] }) {
   const [date, setDate] = useState<Date | undefined>(new Date())
   const [amount, setAmount] = useState('0')
   const [selectIndex, setSelectIndex] = useState(0)
+  const { toast } = useToast()
+  const router = useRouter()
   const handleSave = async () => {
-    console.log(date)
-    await request(
-      RequestModule.bill,
-      {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          categoryId: categories[selectIndex].id,
-          date,
-          amount: +amount,
-        }),
-      },
-    )
+    const { message } = await requestBillCreate({
+      categoryId: categories[selectIndex].id,
+      amount: +amount,
+      date: date!,
+    })
+
+    toast({
+      title: message,
+    })
+
+    router.push('/')
   }
   return (
     <>
