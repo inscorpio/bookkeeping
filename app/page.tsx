@@ -31,7 +31,7 @@ export default async function HomePage() {
                     {
                       group.bills.map(bill => (
                         <TableRow key={bill.id}>
-                          <TableCell>{bill.category.label}</TableCell>
+                          <TableCell>{bill.note || bill.category.label}</TableCell>
                           <TableCell>
                             <Amount>
                               {`${bill.amount}`}

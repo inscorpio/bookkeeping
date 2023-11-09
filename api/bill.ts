@@ -1,31 +1,34 @@
 'use server'
 import type { Bill } from '@prisma/client'
+import { addDays } from 'date-fns'
 import { z } from 'zod'
 import type { CategoryClient } from '~/api/category'
 import prisma from '~/prisma/db'
 
 const billCreateSchema = z.object({
   categoryId: z.number(),
-  amount: z.number(),
+  amount: z.number().positive('请检查金额是否正确'),
   date: z.coerce.date(),
+  note: z.string().nullable(),
 })
 
 export type BillCreate = z.infer<typeof billCreateSchema>
-export type BillClient = Pick<Bill, 'id' | 'amount' | 'date'> & { category: CategoryClient }
+export type BillClient = Pick<Bill, 'id' | 'amount' | 'date' | 'note'> & { category: CategoryClient }
 
 export async function requestBillCreate(bill: BillCreate) {
   const validation = billCreateSchema.safeParse(bill)
-  if (!validation.success)
+  if (!validation.success) {
     return {
       message: '参数错误',
-      error: validation.error.format(),
+      errors: validation.error.errors,
     }
-  const data = await prisma.bill.create({
+  }
+  await prisma.bill.create({
     data: bill,
   })
+
   return {
     message: '创建成功',
-    data,
   }
 }
 
@@ -36,14 +39,40 @@ export async function requestBillsGroupByDate() {
     GROUP BY DATE(date)
     ORDER BY date DESC
   `
-  const data = []
+  const data: {
+    date: string
+    bills: Omit<BillClient, 'date'>[]
+  }[] = []
+
   for (const { date } of groups) {
-    const bills: Omit<BillClient, 'date'>[] = await prisma.$queryRaw`
-      SELECT Bill.id, Bill.amount, JSON_OBJECT('id', Category.id, 'label', Category.label) AS category
-      FROM Bill
-      INNER JOIN Category ON Bill.categoryId = Category.id
-      WHERE DATE(date) = ${date}
-    `
+    const bills = await prisma.bill.findMany({
+      select: {
+        id: true,
+        amount: true,
+        note: true,
+        category: {
+          select: {
+            id: true,
+            label: true,
+          },
+        },
+      },
+      where: {
+        // 大于等于今天
+        date: {
+          gte: new Date(date),
+        },
+        AND: {
+          // 小于明天
+          date: {
+            lte: addDays(new Date(date), 1),
+          },
+        },
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    })
     data.push({ date, bills })
   }
 
