@@ -23,12 +23,11 @@ export default function ActionBar({ date, onSelect, amount }: { date?: Date; onS
                 </span>
               </div>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="flex justify-center max-w-xs">
               <Calendar
                 mode="single"
                 selected={date}
                 onSelect={onSelect}
-                className="rounded-md border"
               />
             </DialogContent>
           </Dialog>

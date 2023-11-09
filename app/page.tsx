@@ -41,7 +41,7 @@ export default async function HomePage() {
                           <TableCell>{bill.category.label}</TableCell>
                           <TableCell>
                             <Amount>
-                              {bill.amount}
+                              {`${bill.amount}`}
                             </Amount>
                           </TableCell>
                         </TableRow>
