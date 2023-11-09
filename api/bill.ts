@@ -1,6 +1,6 @@
 'use server'
 import type { Bill } from '@prisma/client'
-import { addDays } from 'date-fns'
+import { subHours } from 'date-fns'
 import { z } from 'zod'
 import type { CategoryClient } from '~/api/category'
 import prisma from '~/prisma/db'
@@ -34,7 +34,7 @@ export async function requestBillCreate(bill: BillCreate) {
 
 export async function requestBillsGroupByDate() {
   const groups: { date: string }[] = await prisma.$queryRaw`
-    SELECT MAX(DATE_FORMAT(date, '%Y-%m-%d')) AS date
+    SELECT MAX(DATE_FORMAT(CONVERT_TZ(date, 'UTC', 'Asia/Shanghai'), '%Y-%m-%d')) AS date
     FROM Bill
     GROUP BY DATE(date)
     ORDER BY date DESC
@@ -60,13 +60,7 @@ export async function requestBillsGroupByDate() {
       where: {
         // 大于等于今天
         date: {
-          gte: new Date(date),
-        },
-        AND: {
-          // 小于明天
-          date: {
-            lte: addDays(new Date(date), 1),
-          },
+          equals: subHours(new Date(date), 8),
         },
       },
       orderBy: {

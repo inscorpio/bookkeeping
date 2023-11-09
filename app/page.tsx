@@ -14,6 +14,7 @@ import {
   TableRow,
 } from '~/components/ui/table'
 
+export const dynamic = 'fore-dynamic'
 export default async function HomePage() {
   const { data: billsGroupByDate } = await requestBillsGroupByDate()
   return (

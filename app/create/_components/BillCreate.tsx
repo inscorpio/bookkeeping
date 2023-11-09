@@ -1,4 +1,5 @@
 'use client'
+import { startOfDay } from 'date-fns'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -12,7 +13,7 @@ import { Input } from '~/components/ui/input'
 import { useToast } from '~/components/ui/use-toast'
 
 export default function BillCreate({ categories }: { categories: CategoryClient[] }) {
-  const [date, setDate] = useState<Date | undefined>(new Date())
+  const [date, setDate] = useState<Date | undefined>(startOfDay(new Date()))
   const [amount, setAmount] = useState('0')
   const [selectIndex, setSelectIndex] = useState(0)
   const [note, setNote] = useState('')
