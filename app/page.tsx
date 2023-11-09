@@ -1,4 +1,4 @@
-import type { Bill, Category } from '@prisma/client'
+import { requestBillsGroupByDate } from '~/api/bill'
 import Amount from '~/components/Amount'
 import RootLayout from '~/components/RootLayout'
 import {
@@ -13,16 +13,9 @@ import {
   TableCell,
   TableRow,
 } from '~/components/ui/table'
-import { RequestModule, request } from '~/utils/request'
-
-interface BillGroupByDate {
-  date: string
-  bills: (Bill & { category: Category })[]
-}
 
 export default async function HomePage() {
-  const billsGroupByDate = await request<BillGroupByDate[]>(RequestModule.bill)
-  // await new Promise(resolve => setTimeout(() => resolve(true), 3000))
+  const { data: billsGroupByDate } = await requestBillsGroupByDate()
   return (
     <RootLayout title="主页">
       <div className="flex flex-col gap-4">

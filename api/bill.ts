@@ -25,3 +25,31 @@ export async function requestBillCreate(bill: BillCreate) {
     data,
   }
 }
+
+export async function requestBillsGroupByDate() {
+  const groups: { date: string }[] = await prisma.$queryRaw`
+    SELECT MAX(DATE_FORMAT(date, '%Y-%m-%d')) AS date
+    FROM Bill
+    GROUP BY DATE(date)
+    ORDER BY date DESC
+  `
+  const data = []
+  for (const { date } of groups) {
+    const bills: {
+      id: number
+      amount: number
+      category: {
+        id: number
+        label: string
+      }
+    }[] = await prisma.$queryRaw`
+      SELECT Bill.id, Bill.amount, JSON_OBJECT('id', Category.id, 'label', Category.label) AS category
+      FROM Bill
+      INNER JOIN Category ON Bill.categoryId = Category.id
+      WHERE DATE(date) = ${date}
+    `
+    data.push({ date, bills })
+  }
+
+  return { data }
+}
