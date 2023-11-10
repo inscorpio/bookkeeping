@@ -1,4 +1,5 @@
 import { requestBillsGroupByDate } from '~/api/bill'
+import Wallet from '~/app/_components/Wallet'
 import Amount from '~/components/Amount'
 import RootLayout from '~/components/RootLayout'
 import {
@@ -20,6 +21,8 @@ export default async function HomePage() {
   return (
     <RootLayout title="主页">
       <div className="flex flex-col gap-4">
+        <Wallet />
+        <h2>账单</h2>
         {
           billsGroupByDate.map(group => (
             <Card key={group.date}>

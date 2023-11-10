@@ -1,9 +1,9 @@
-import type { PropsWithChildren } from 'react'
+import type { ReactNode } from 'react'
 
-export default function Amount({ children }: PropsWithChildren) {
+export default function Amount({ className, children }: { className?: string; children: ReactNode }) {
   return (
     <>
-      <div>
+      <div className={className}>
         ¥
         {' '}
         <span className="text-base">
