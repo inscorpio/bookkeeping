@@ -33,18 +33,19 @@ export async function requestBillCreate(bill: BillCreate) {
 }
 
 export async function requestBillsGroupByDate() {
-  const groups: { date: string }[] = await prisma.$queryRaw`
-    SELECT MAX(DATE_FORMAT(CONVERT_TZ(date, 'UTC', 'Asia/Shanghai'), '%Y-%m-%d')) AS date
+  const groups: { date: string; amount: number }[] = await prisma.$queryRaw`
+    SELECT MAX(DATE_FORMAT(CONVERT_TZ(date, 'UTC', 'Asia/Shanghai'), '%Y-%m-%d')) AS date, SUM(amount) AS amount
     FROM Bill
     GROUP BY DATE(date)
     ORDER BY date DESC
   `
   const data: {
     date: string
+    amount: number
     bills: Omit<BillClient, 'date'>[]
   }[] = []
 
-  for (const { date } of groups) {
+  for (const { date, amount } of groups) {
     const bills = await prisma.bill.findMany({
       select: {
         id: true,
@@ -58,7 +59,6 @@ export async function requestBillsGroupByDate() {
         },
       },
       where: {
-        // 大于等于今天
         date: {
           equals: subHours(new Date(date), 8),
         },
@@ -67,7 +67,7 @@ export async function requestBillsGroupByDate() {
         id: 'desc',
       },
     })
-    data.push({ date, bills })
+    data.push({ date, amount, bills })
   }
 
   return { data }

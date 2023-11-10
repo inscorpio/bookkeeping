@@ -25,6 +25,7 @@ export default async function HomePage() {
             <Card key={group.date}>
               <CardHeader className="p-4">
                 <CardTitle className="text-xl">{group.date}</CardTitle>
+                <Amount>{group.amount}</Amount>
               </CardHeader>
               <CardContent className="p-4 pt-0">
                 <Table>
