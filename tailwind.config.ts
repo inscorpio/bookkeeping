@@ -1,5 +1,6 @@
 import type { Config } from 'tailwindcss'
 import TailwindcssAnimate from 'tailwindcss-animate'
+import plugin from 'tailwindcss/plugin'
 
 const config: Config = {
   darkMode: ['class'],
@@ -80,6 +81,33 @@ const config: Config = {
       },
     },
   },
-  plugins: [TailwindcssAnimate],
+  plugins: [
+    TailwindcssAnimate,
+    plugin(({ addUtilities }) => {
+      addUtilities({
+        '.flex-center': {
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        '.flex-x-center': {
+          display: 'flex',
+          justifyContent: 'center',
+        },
+        '.flex-y-center': {
+          display: 'flex',
+          alignItems: 'center',
+        },
+        '.flex-x-between': {
+          display: 'flex',
+          justifyContent: 'space-between',
+        },
+        '.flex-y-between': {
+          display: 'flex',
+          alignItems: 'space-between',
+        },
+      })
+    }),
+  ],
 }
 export default config

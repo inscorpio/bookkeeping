@@ -12,18 +12,18 @@ import { normalizeDate } from '~/utils'
 export default function ActionBar({ date, onSelect, amount }: { date?: Date; onSelect: SelectSingleEventHandler; amount: string }) {
   return (
     <>
-      <ul className="flex items-center gap-2 mb-2 p-2 w-full text-xs bg-white">
+      <ul className="flex-y-center gap-2 mb-2 p-2 w-full text-xs bg-white">
         <li>
           <Dialog>
             <DialogTrigger>
-              <div className="flex items-center gap-1">
+              <div className="flex-y-center gap-1">
                 <AiOutlineCalendar size="1.2em" />
                 <span className="mt-[2px]">
                   {normalizeDate(date)}
                 </span>
               </div>
             </DialogTrigger>
-            <DialogContent className="flex justify-center max-w-xs">
+            <DialogContent className="flex-x-center max-w-xs">
               <Calendar
                 mode="single"
                 selected={date}
