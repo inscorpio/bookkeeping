@@ -11,6 +11,7 @@ import BackTo from '~/components/BackTo'
 import { Input } from '~/components/ui/input'
 import { Container, Footer, Header, Main } from '~/components/ui/layout'
 import { useToast } from '~/components/ui/use-toast'
+import { showZodErrorToasts } from '~/utils'
 
 export default function BillCreate({ categories }: { categories: CategoryClient[] }) {
   const [date, setDate] = useState<Date | undefined>(startOfDay(new Date()))
@@ -26,20 +27,9 @@ export default function BillCreate({ categories }: { categories: CategoryClient[
       date: date!,
       note,
     })
-
-    if (errors) {
-      errors.forEach((e) => {
-        toast({
-          title: e.message,
-        })
-      })
-    }
-    else {
-      toast({
-        title: message,
-      })
-      router.push('/')
-    }
+    await showZodErrorToasts(errors)
+    toast({ title: message })
+    router.push('/')
   }
   return (
     <>

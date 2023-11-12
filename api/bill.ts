@@ -1,16 +1,10 @@
 'use server'
 import type { Bill } from '@prisma/client'
 import { subHours } from 'date-fns'
-import { z } from 'zod'
+import type { z } from 'zod'
 import type { CategoryClient } from '~/api/category'
 import prisma from '~/prisma/db'
-
-const billCreateSchema = z.object({
-  categoryId: z.number(),
-  amount: z.number().positive('请检查金额是否正确'),
-  date: z.coerce.date(),
-  note: z.string().nullable(),
-})
+import { billCreateSchema } from '~/schemas'
 
 export type BillCreate = z.infer<typeof billCreateSchema>
 export type BillClient = Pick<Bill, 'id' | 'amount' | 'date' | 'note'> & { category: CategoryClient }

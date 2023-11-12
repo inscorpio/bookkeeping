@@ -1,7 +1,7 @@
 'use server'
 import type { Category } from '@prisma/client'
-import type { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { z } from 'zod'
+import { catchError } from '~/api/common'
 import prisma from '~/prisma/db'
 
 const CategoryInputSchema = z.object({
@@ -27,14 +27,7 @@ export async function requestCategoryCreate(category: CategoryCreate) {
     return { message: '创建成功', data }
   }
   catch (error) {
-    const PrismaClientKnownRequestError = error as PrismaClientKnownRequestError
-    if (PrismaClientKnownRequestError.code === 'P2002')
-      return { message: '该分类已存在', error }
-
-    if (error?.toString() === 'SyntaxError: Unexpected end of JSON input')
-      return { message: '解析 ResponseBody 失败', error }
-
-    return { message: '未知错误', error }
+    return catchError(error, { module: '分类' })
   }
 }
 
