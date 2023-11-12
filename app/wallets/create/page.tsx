@@ -1,7 +1,9 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import * as z from 'zod'
+import type { z } from 'zod'
+import { requestWalletAccountCreate } from '~/api/wallet'
 import BackTo from '~/components/BackTo'
 import {
   Form,
@@ -14,25 +16,32 @@ import {
 import { Input } from '~/components/ui/input'
 import { Input as InputFix, InputProvider, Prefix } from '~/components/ui/input.fix'
 import { Container, Header, Main } from '~/components/ui/layout'
+import { toast } from '~/components/ui/use-toast'
+import { walletAccountFormSchema } from '~/schemas'
+import { showZodErrorToasts } from '~/utils'
+
+type WalletAccountForm = z.infer<typeof walletAccountFormSchema>
 
 export default function Page() {
-  const formSchema = z.object({
-    name: z.string({ required_error: '账户名称不能为空' }).min(1, '账户名称不能为空').max(50, '账户名称不能超过 50 个字符'),
-    amount: z.string(),
-  })
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const router = useRouter()
+  const form = useForm<WalletAccountForm>({
+    resolver: zodResolver(walletAccountFormSchema),
     defaultValues: {
       name: '',
       amount: '',
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // TODO: build API
-    // eslint-disable-next-line no-console
-    console.log(values)
+  async function onSubmit(walletAccount: WalletAccountForm) {
+    const { success, message, errors } = await requestWalletAccountCreate({
+      ...walletAccount,
+      amount: Number(walletAccount.amount),
+    }) ?? {}
+    await showZodErrorToasts(errors)
+    toast({ title: message })
+    if (success) {
+      router.push('/wallets')
+    }
   }
   return (
     <>

@@ -28,3 +28,11 @@ model Bill {
 
   @@index([categoryId], map: "Bill_categoryId_fkey")
 }
+
+model WalletAccount {
+  id       Int      @id @default(autoincrement())
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  name     String   @unique
+  amount   Decimal
+}
