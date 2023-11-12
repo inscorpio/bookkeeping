@@ -1,14 +1,17 @@
-import AddAccount from '~/app/wallets/_components/AddAccount'
-import BackToHome from '~/components/BackToHome'
+import { PlusIcon } from '@radix-ui/react-icons'
+import Link from 'next/link'
+import BackTo from '~/components/BackTo'
 import { Container, Header, Main } from '~/components/ui/layout'
 
-export default function Pages() {
+export default function Page() {
   return (
     <>
       <Container>
         <Header className="flex-x-between">
-          <BackToHome />
-          <AddAccount />
+          <BackTo />
+          <Link href="wallets/create">
+            <PlusIcon width="1.5em" height="1.5em" />
+          </Link>
         </Header>
         <Main>
           wallets

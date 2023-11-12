@@ -39,7 +39,7 @@ export default async function HomePage() {
                           <TableCell>{bill.note || bill.category.label}</TableCell>
                           <TableCell>
                             <Amount>
-                              {`${bill.amount}`}
+                              {bill.amount.toNumber()}
                             </Amount>
                           </TableCell>
                         </TableRow>

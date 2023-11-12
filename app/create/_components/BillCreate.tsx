@@ -7,7 +7,7 @@ import type { CategoryClient } from '~/api/category'
 import ActionBar from '~/app/create/_components/ActionBar'
 import CategoryList from '~/app/create/_components/CategoryList'
 import KeyBoard from '~/app/create/_components/KeyBoard'
-import BackToHome from '~/components/BackToHome'
+import BackTo from '~/components/BackTo'
 import { Input } from '~/components/ui/input'
 import { Container, Footer, Header, Main } from '~/components/ui/layout'
 import { useToast } from '~/components/ui/use-toast'
@@ -45,9 +45,9 @@ export default function BillCreate({ categories }: { categories: CategoryClient[
     <>
       <Container className="bg-stone-100">
         <Header>
-          <BackToHome />
+          <BackTo />
         </Header>
-        <Main className="p-0">
+        <Main className="px-6">
           <CategoryList
             categories={categories}
             selectIndex={selectIndex}

@@ -6,7 +6,7 @@ import { Button } from '~/components/ui/button'
 export default function CategoryList({ categories, selectIndex, onSelect }: { categories: CategoryClient[]; selectIndex: number; onSelect: (index: number) => void }) {
   return (
     <>
-      <ul className="grid grid-cols-4 gap-4 m-4">
+      <ul className="grid grid-cols-4 gap-4">
         {
           // eslint-disable-next-line antfu/consistent-list-newline
           categories.map((v, i) => (
