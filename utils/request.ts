@@ -25,12 +25,10 @@ instance.interceptors.request.use((config) => {
 instance.interceptors.response.use(async (response) => {
   await handleServerResponse(response)
   return response
-}, (error: AxiosError<ResponseDataUnknownServiceData>) => {
+}, async (error: AxiosError<ResponseDataUnknownServiceData>) => {
   const { message, response } = error
   if (response) {
-    const { data } = response
-    const { message } = data
-    toast({ title: message })
+    await handleServerResponse(response)
   }
   else {
     toast({ title: message })
@@ -47,6 +45,7 @@ async function handleServerResponse(response: AxiosResponse<ResponseDataUnknownS
   else {
     const { errors } = data
     await showZodErrorToasts(errors)
+    return Promise.reject(response)
   }
 }
 

@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { catchError } from '~/utils'
 import prisma from '~/prisma/db'
 import { categorySchema } from '~/schemas'
-import type { CategoryClient } from '~/types'
+import type { CategoryClient, CategoryCreate } from '~/types'
 
 export async function GET(_: NextRequest) {
   const data: CategoryClient[] = await prisma.category.findMany({
@@ -10,13 +10,16 @@ export async function GET(_: NextRequest) {
       id: true,
       label: true,
     },
+    orderBy: {
+      id: 'asc',
+    },
   })
   return NextResponse.json({ success: true, data }, { status: 200 })
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const category = await request.json()
+    const category: CategoryCreate = await request.json()
     const validation = categorySchema.safeParse(category)
     if (!validation.success) {
       return NextResponse.json({ message: '参数错误', errors: validation.error.issues }, { status: 400 })
