@@ -1,5 +1,6 @@
 import type { AxiosRequestConfig } from 'axios'
 import axios from 'axios'
+import type { RequestGetDataMap, RequestModule, ResponseGetDataMap } from '~/types'
 
 export interface ResponseData<T = unknown> {
   success: boolean
@@ -34,18 +35,18 @@ instance.interceptors.response.use((response) => {
   return Promise.reject(error)
 })
 
-async function request<T, D = unknown>(config: AxiosRequestConfig<D>) {
-  const { data } = await instance.request<ResponseData<T>>(config)
+interface AxiosRequestConfigWithUrl<T> extends AxiosRequestConfig<T> {
+  url: RequestModule
+}
+
+async function request<Module extends RequestModule>(config: AxiosRequestConfigWithUrl<RequestGetDataMap[Module]>) {
+  const { data } = await instance.request<ResponseData<ResponseGetDataMap[Module]>>(config)
   return data
 }
 
-export enum RequestModule {
-  wallet = '/wallet',
-}
-
-request.get = async <T, D = unknown>(url: RequestModule, config?: AxiosRequestConfig<D>) => {
-  const { data } = await instance.get<ResponseData<T>>(url, config)
+request.get = async <Module extends RequestModule>(url: Module, config?: AxiosRequestConfig<RequestGetDataMap[Module]>) => {
+  const { data } = await instance.get<ResponseData<ResponseGetDataMap[Module]>>(url, config)
   return data
 }
 
-export default request
+export { request }

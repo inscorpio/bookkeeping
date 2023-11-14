@@ -1,8 +1,28 @@
-import clsx from 'clsx'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import clsx from 'clsx'
+import { Decimal } from '@prisma/client/runtime/library'
 import { Toaster } from '~/components/ui/toaster'
+import { isObject } from '~/utils'
 import './globals.css'
+
+const originalStringify = JSON.stringify
+
+function rewriteJSONStringify() {
+  JSON.stringify = function (value, replacer: any, space) {
+    if (!replacer && isObject(value)) {
+      replacer = function (this: any, key: string, value: unknown) {
+        if (this[key] instanceof Decimal) {
+          return this[key].toNumber()
+        }
+        return value
+      }
+    }
+    return originalStringify(value, replacer, space)
+  }
+}
+
+rewriteJSONStringify()
 
 const inter = Inter({ subsets: ['latin'] })
 

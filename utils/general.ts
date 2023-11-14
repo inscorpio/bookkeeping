@@ -17,3 +17,7 @@ export function showZodErrorToasts(errors?: ZodIssue[]) {
     }
   })
 }
+
+export function isObject(value: unknown) {
+  return typeof value === 'object' && value !== null
+}
