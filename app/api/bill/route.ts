@@ -4,6 +4,30 @@ import prisma from '~/prisma/db'
 import { billCreateSchema } from '~/schemas'
 import type { BillCreate, BillServer } from '~/types'
 import { categorySelectField } from '~/app/api/category/route'
+import { walletAccountSelectField } from '~/app/api/wallet/route'
+
+async function updateWalletAccout(bill: BillCreate) {
+  const walletAccount = await prisma.walletAccount.findUnique({
+    where: {
+      id: bill.walletAccountId,
+    },
+    select: walletAccountSelectField,
+  })
+
+  if (walletAccount) {
+    await prisma.walletAccount.update({
+      where: {
+        id: bill.walletAccountId,
+      },
+      data: {
+        amount: walletAccount.amount.minus(bill.amount),
+      },
+    })
+  }
+  else {
+    return NextResponse.json({ message: '钱包账户不存在' }, { status: 404 })
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,6 +36,10 @@ export async function POST(request: NextRequest) {
     if (!validation.success) {
       return NextResponse.json({ message: '参数错误', errors: validation.error.issues }, { status: 400 })
     }
+
+    const res = await updateWalletAccout(bill)
+
+    if (res) return res
 
     const data: BillServer = await prisma.bill.create({
       data: bill,
@@ -24,11 +52,7 @@ export async function POST(request: NextRequest) {
           select: categorySelectField,
         },
         walletAccount: {
-          select: {
-            id: true,
-            name: true,
-            amount: true,
-          },
+          select: walletAccountSelectField,
         },
       },
     })
