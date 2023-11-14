@@ -1,30 +1,8 @@
 'use server'
-import type { Bill } from '@prisma/client'
 import { subHours } from 'date-fns'
-import type { z } from 'zod'
-import type { CategoryClient } from '~/types'
+import type { BillClient } from '~/types'
 import prisma from '~/prisma/db'
-import { billCreateSchema } from '~/schemas'
-
-export type BillCreate = z.infer<typeof billCreateSchema>
-export type BillClient = Pick<Bill, 'id' | 'amount' | 'date' | 'note'> & { category: CategoryClient }
-
-export async function requestBillCreate(bill: BillCreate) {
-  const validation = billCreateSchema.safeParse(bill)
-  if (!validation.success) {
-    return {
-      message: '参数错误',
-      errors: validation.error.errors,
-    }
-  }
-  await prisma.bill.create({
-    data: bill,
-  })
-
-  return {
-    message: '创建成功',
-  }
-}
+import { categorySelectField } from '~/app/api/category/route'
 
 export async function requestBillsGroupByDate() {
   const groups: { date: string; amount: number }[] = await prisma.$queryRaw`
@@ -36,7 +14,7 @@ export async function requestBillsGroupByDate() {
   const data: {
     date: string
     amount: number
-    bills: Omit<BillClient, 'date'>[]
+    bills: Omit<BillClient, 'date' | 'walletAccount'>[]
   }[] = []
 
   for (const { date, amount } of groups) {
@@ -46,10 +24,7 @@ export async function requestBillsGroupByDate() {
         amount: true,
         note: true,
         category: {
-          select: {
-            id: true,
-            label: true,
-          },
+          select: categorySelectField,
         },
       },
       where: {

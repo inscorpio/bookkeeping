@@ -2,33 +2,30 @@
 import { startOfDay } from 'date-fns'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { requestBillCreate } from '~/api/bill'
-import type { CategoryClient } from '~/types'
+import { type CategoryClient, RequestUrl, type WalletAccountClient } from '~/types'
 import ActionBar from '~/app/create/_components/ActionBar'
 import CategoryList from '~/app/create/_components/CategoryList'
 import KeyBoard from '~/app/create/_components/KeyBoard'
 import BackTo from '~/components/BackTo'
 import { Input } from '~/components/ui/input'
 import { Container, Footer, Header, Main } from '~/components/ui/layout'
-import { useToast } from '~/components/ui/use-toast'
-import { showZodErrorToasts } from '~/utils'
+import { request } from '~/utils'
 
-export default function BillCreate({ categories }: { categories: CategoryClient[] }) {
+export default function BillCreate({ categories, walletAccounts }: { categories: CategoryClient[]; walletAccounts: WalletAccountClient[] }) {
+  let walletAccountId = walletAccounts[0].id
   const [date, setDate] = useState<Date | undefined>(startOfDay(new Date()))
   const [amount, setAmount] = useState('0')
   const [selectIndex, setSelectIndex] = useState(0)
   const [note, setNote] = useState('')
-  const { toast } = useToast()
   const router = useRouter()
   const handleSave = async () => {
-    const { message, errors } = await requestBillCreate({
+    await request.post(RequestUrl.bill, {
       categoryId: categories[selectIndex].id,
+      walletAccountId,
       amount: +amount,
       date: date!,
       note,
     })
-    await showZodErrorToasts(errors)
-    toast({ title: message })
     router.push('/')
   }
   return (
@@ -55,6 +52,8 @@ export default function BillCreate({ categories }: { categories: CategoryClient[
             date={date}
             amount={amount}
             onSelect={setDate}
+            walletAccounts={walletAccounts}
+            onWalletChange={id => walletAccountId = id}
           />
           <KeyBoard
             value={amount}

@@ -7,4 +7,5 @@ import type { walletAccountFormSchema } from '~/schemas'
 // Then I rewrote the serialization method to convert it to a numeric type
 // --------------> rewriteJSONStringify
 export type WalletAccountClient = Pick<WalletAccount, 'id' | 'name'> & { amount: number }
+export type WalletAccountServer = Pick<WalletAccount, 'id' | 'name' | 'amount'>
 export type WalletAccountCreate = z.infer<typeof walletAccountFormSchema>

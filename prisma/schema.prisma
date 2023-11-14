@@ -17,14 +17,16 @@ model Category {
 }
 
 model Bill {
-  id         Int      @id @default(autoincrement())
-  createAt   DateTime @default(now())
-  updateAt   DateTime @updatedAt
-  amount     Decimal
-  categoryId Int
-  date       DateTime
-  note       String?
-  category   Category @relation(fields: [categoryId], references: [id])
+  id              Int           @id @default(autoincrement())
+  createAt        DateTime      @default(now())
+  updateAt        DateTime      @updatedAt
+  amount          Decimal
+  categoryId      Int
+  walletAccountId Int
+  walletAccount   WalletAccount @relation(fields: [walletAccountId], references: [id])
+  date            DateTime
+  note            String?
+  category        Category      @relation(fields: [categoryId], references: [id])
 
   @@index([categoryId], map: "Bill_categoryId_fkey")
 }
@@ -35,4 +37,5 @@ model WalletAccount {
   updateAt DateTime @updatedAt
   name     String   @unique
   amount   Decimal
+  Bill     Bill[]
 }

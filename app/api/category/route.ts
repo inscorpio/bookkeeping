@@ -4,12 +4,14 @@ import prisma from '~/prisma/db'
 import { categorySchema } from '~/schemas'
 import type { CategoryClient, CategoryCreate } from '~/types'
 
+export const categorySelectField = {
+  id: true,
+  label: true,
+}
+
 export async function GET(_: NextRequest) {
   const data: CategoryClient[] = await prisma.category.findMany({
-    select: {
-      id: true,
-      label: true,
-    },
+    select: categorySelectField,
     orderBy: {
       id: 'asc',
     },
@@ -27,10 +29,7 @@ export async function POST(request: NextRequest) {
 
     const data: CategoryClient = await prisma.category.create({
       data: category,
-      select: {
-        id: true,
-        label: true,
-      },
+      select: categorySelectField,
     })
     return NextResponse.json({ success: true, message: '创建成功', data }, { status: 201 })
   }
