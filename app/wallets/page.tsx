@@ -3,11 +3,11 @@ import Link from 'next/link'
 import Amount from '~/components/Amount'
 import BackTo from '~/components/BackTo'
 import { Container, Header, Main } from '~/components/ui/layout'
-import { RequestModule } from '~/types'
+import { RequestUrl } from '~/types'
 import { request } from '~/utils'
 
 export default async function Page() {
-  const { data: wallets } = await request.get(RequestModule.wallet)
+  const wallets = await request.get(RequestUrl.wallet) ?? []
   return (
     <>
       <Container>

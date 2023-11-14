@@ -1,19 +1,53 @@
-import type { WalletAccount } from '@prisma/client'
+import type { z } from 'zod'
+import type { CategoryClient, CategoryCreate, WalletAccountClient, WalletAccountCreate } from '~/types'
 
-// Fix a typing error in the amount field
-// Because the Decimal type will be converted to string type in serialization.
-// Then I rewrote the serialization method to convert it to a numeric type
-// --------------> rewriteJSONStringify
-export type WalletAccountClient = Pick<WalletAccount, 'id' | 'name'> & { amount: number }
-
-export enum RequestModule {
+export enum RequestUrl {
   wallet = '/wallet',
+  category = '/category',
 }
 
-export interface RequestGetDataMap {
-  [RequestModule.wallet]: undefined
+export type RequestMethod = 'get' | 'post'
+
+export interface RequestModule {
+  [RequestUrl.wallet]: {
+    get: {
+      request: undefined
+      response: WalletAccountClient[]
+    }
+    post: {
+      request: WalletAccountCreate
+      response: unknown
+    }
+  }
+  [RequestUrl.category]: {
+    get: {
+      request: undefined
+      response: CategoryClient[]
+    }
+    post: {
+      request: CategoryCreate
+      response: unknown
+    }
+  }
 }
 
-export interface ResponseGetDataMap {
-  [RequestModule.wallet]: WalletAccountClient[]
+interface ResponseSuccessUnknownData<T = unknown> {
+  success: true
+  message: string
+  data: T
 }
+
+interface ResponseSuccess<U extends RequestUrl, M extends RequestMethod | undefined> {
+  success: true
+  message: string
+  data: M extends RequestMethod ? RequestModule[U][M]['response'] : RequestModule[U]['get']['response']
+}
+
+interface ResponseError {
+  success: false
+  message: string
+  errors: z.ZodIssue[]
+}
+
+export type ResponseData<U extends RequestUrl, M extends RequestMethod | undefined> = ResponseSuccess<U, M> | ResponseError
+export type ResponseDataUnknownServiceData<T = unknown> = ResponseSuccessUnknownData<T> | ResponseError

@@ -2,7 +2,7 @@
 import type { Bill } from '@prisma/client'
 import { subHours } from 'date-fns'
 import type { z } from 'zod'
-import type { CategoryClient } from '~/api/category'
+import type { CategoryClient } from '~/types'
 import prisma from '~/prisma/db'
 import { billCreateSchema } from '~/schemas'
 

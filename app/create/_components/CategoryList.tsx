@@ -1,6 +1,7 @@
 'use client'
+import Link from 'next/link'
 import { AiOutlineSetting } from 'react-icons/ai'
-import type { CategoryClient } from '~/api/category'
+import type { CategoryClient } from '~/types'
 import { Button } from '~/components/ui/button'
 
 export default function CategoryList({ categories, selectIndex, onSelect }: { categories: CategoryClient[]; selectIndex: number; onSelect: (index: number) => void }) {
@@ -22,9 +23,11 @@ export default function CategoryList({ categories, selectIndex, onSelect }: { ca
           ))
         }
         <li key="setting">
-          <Button variant="white" className="w-full">
-            <AiOutlineSetting size="2em" />
-          </Button>
+          <Link href="/category/create">
+            <Button variant="white" className="w-full">
+              <AiOutlineSetting size="2em" />
+            </Button>
+          </Link>
         </li>
       </ul>
     </>

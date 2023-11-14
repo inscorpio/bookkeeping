@@ -1,11 +1,8 @@
-import type { AxiosRequestConfig } from 'axios'
+import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import axios from 'axios'
-import type { RequestGetDataMap, RequestModule, ResponseGetDataMap } from '~/types'
-
-export interface ResponseData<T = unknown> {
-  success: boolean
-  data: T
-}
+import { toast } from '~/components/ui/use-toast'
+import type { RequestMethod, RequestModule, RequestUrl, ResponseData, ResponseDataUnknownServiceData } from '~/types'
+import { showZodErrorToasts } from '~/utils'
 
 const instance = axios.create({
   baseURL: 'http://localhost:3000/api',
@@ -25,27 +22,54 @@ instance.interceptors.request.use((config) => {
 })
 
 // Add a response interceptor
-instance.interceptors.response.use((response) => {
-  // Any status code that lie within the range of 2xx cause this function to trigger
-  // Do something with response data
+instance.interceptors.response.use(async (response) => {
+  await handleServerResponse(response)
   return response
-}, (error) => {
-  // Any status codes that falls outside the range of 2xx cause this function to trigger
-  // Do something with response error
+}, (error: AxiosError<ResponseDataUnknownServiceData>) => {
+  const { message, response } = error
+  if (response) {
+    const { data } = response
+    const { message } = data
+    toast({ title: message })
+  }
+  else {
+    toast({ title: message })
+  }
   return Promise.reject(error)
 })
 
-interface AxiosRequestConfigWithUrl<T> extends AxiosRequestConfig<T> {
-  url: RequestModule
+async function handleServerResponse(response: AxiosResponse<ResponseDataUnknownServiceData>) {
+  const { data } = response
+  const { success, message } = data
+  if (success) {
+    toast({ title: message })
+  }
+  else {
+    const { errors } = data
+    await showZodErrorToasts(errors)
+  }
 }
 
-async function request<Module extends RequestModule>(config: AxiosRequestConfigWithUrl<RequestGetDataMap[Module]>) {
-  const { data } = await instance.request<ResponseData<ResponseGetDataMap[Module]>>(config)
+interface Config<U extends RequestUrl, M extends RequestMethod> extends AxiosRequestConfig<RequestModule[U][M]['request']> {
+  url: U
+  method?: M
+}
+
+async function request<U extends RequestUrl, M extends RequestMethod = 'get'>(config: Config<U, M>) {
+  const { data } = await instance.request<ResponseData<U, M>>(config)
   return data
 }
 
-request.get = async <Module extends RequestModule>(url: Module, config?: AxiosRequestConfig<RequestGetDataMap[Module]>) => {
-  const { data } = await instance.get<ResponseData<ResponseGetDataMap[Module]>>(url, config)
+request.get = async <U extends RequestUrl>(url: U, config?: Config<U, 'get'>) => {
+  const { data } = await instance.get<ResponseData<U, 'get'>>(url, config)
+  const { success } = data
+  if (success) {
+    const { data: serviceData } = data
+    return serviceData
+  }
+}
+request.post = async <U extends RequestUrl>(url: U, requestData?: RequestModule[U]['post']['request'], config?: Config<U, 'post'>) => {
+  const { data } = await instance.post<ResponseData<U, 'post'>>(url, requestData, config)
   return data
 }
 
