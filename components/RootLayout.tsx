@@ -6,7 +6,7 @@ export default function RootLayout({ title, children }: { title: string; childre
   return (
     <Container>
       <Header>
-        <h1 className="text-4xl">{title}</h1>
+        <h1>{title}</h1>
       </Header>
       <Main>
         {children}

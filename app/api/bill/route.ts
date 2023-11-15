@@ -1,8 +1,10 @@
 import { type NextRequest, NextResponse } from 'next/server'
+import { subHours } from 'date-fns'
+import type { Decimal } from '@prisma/client/runtime/library'
 import { catchError } from '~/utils'
 import prisma from '~/prisma/db'
 import { billCreateSchema } from '~/schemas'
-import type { BillCreate, BillServer } from '~/types'
+import type { BillCreate, BillGroupByDateServer, BillServer } from '~/types'
 import { categorySelectField } from '~/app/api/category/route'
 import { walletAccountSelectField } from '~/app/api/wallet/route'
 
@@ -61,4 +63,37 @@ export async function POST(request: NextRequest) {
   catch (error) {
     return catchError(error, { module: '账单' })
   }
+}
+
+export async function GET(_: NextRequest) {
+  const groups: { date: string; amount: Decimal }[] = await prisma.$queryRaw`
+    SELECT MAX(DATE_FORMAT(CONVERT_TZ(date, 'UTC', 'Asia/Shanghai'), '%Y-%m-%d')) AS date, SUM(amount) AS amount
+    FROM Bill
+    GROUP BY DATE(date)
+    ORDER BY date DESC
+  `
+  const data: BillGroupByDateServer[] = []
+
+  for (const { date, amount } of groups) {
+    const bills = await prisma.bill.findMany({
+      select: {
+        id: true,
+        amount: true,
+        note: true,
+        category: {
+          select: categorySelectField,
+        },
+      },
+      where: {
+        date: {
+          equals: subHours(new Date(date), 8),
+        },
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    })
+    data.push({ date, amount, bills })
+  }
+  return NextResponse.json({ success: true, data }, { status: 200 })
 }

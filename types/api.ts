@@ -1,5 +1,5 @@
 import type { z } from 'zod'
-import type { BillClient, BillCreate, CategoryClient, CategoryCreate, WalletAccountClient, WalletAccountCreate } from '~/types'
+import type { BillCreate, BillGroupByDateClient, CategoryClient, CategoryCreate, WalletAccountClient, WalletAccountCreate } from '~/types'
 
 export enum RequestUrl {
   wallet = '/wallet',
@@ -33,7 +33,7 @@ export interface RequestModule {
   [RequestUrl.bill]: {
     get: {
       request: unknown
-      response: BillClient[]
+      response: BillGroupByDateClient[]
     }
     post: {
       request: BillCreate

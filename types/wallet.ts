@@ -4,7 +4,7 @@ import type { walletAccountFormSchema } from '~/schemas'
 
 // Fix a typing error in the amount field
 // Because the Decimal type will be converted to string type in serialization.
-// Then I rewrote the serialization method to convert it to a numeric type
+// Then I rewrote the serialization method to convert it to a number type
 // --------------> rewriteJSONStringify
 export type WalletAccountClient = Pick<WalletAccount, 'id' | 'name'> & { amount: number }
 export type WalletAccountServer = Pick<WalletAccount, 'id' | 'name' | 'amount'>
