@@ -4,7 +4,7 @@ import { RequestUrl } from '~/types'
 import { request } from '~/utils'
 
 export default async function Wallet() {
-  const wallets = await request.get(RequestUrl.wallet) ?? []
+  const walletAccounts = await request.get(RequestUrl.walletExpenditure) ?? []
   return (
     <>
       <h2>
@@ -13,20 +13,20 @@ export default async function Wallet() {
         </Link>
       </h2>
       {
-        wallets.map(wallet => (
-          <div key={wallet.id} className="py-2 px-4 shadow rounded-md">
+        walletAccounts.map(account => (
+          <div key={account.id} className="py-2 px-4 shadow rounded-md">
             <div className="flex-x-between flex-y-center pb-1 border-b border-dashed border-stone-200">
-              <h4>{wallet.name}</h4>
-              <Amount>{wallet.amount}</Amount>
+              <h4>{account.name}</h4>
+              <Amount>{account.amount}</Amount>
             </div>
             <div className="flex-x-between mt-2">
-              <div className="flex">
+              <div className="flex-y-center">
                 今日消费：
-                <Amount>100</Amount>
+                <Amount>{account.todayExpenditure}</Amount>
               </div>
-              <div className="flex">
+              <div className="flex-y-center">
                 本月消费：
-                <Amount>100</Amount>
+                <Amount>{account.monthlyExpenditure}</Amount>
               </div>
             </div>
           </div>
