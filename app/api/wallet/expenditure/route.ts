@@ -1,6 +1,6 @@
 import { addDays, setMonth, startOfDay } from 'date-fns'
 import { type NextRequest, NextResponse } from 'next/server'
-import { walletAccountSelectField } from '~/app/api/wallet/route'
+import { walletAccountSelectField } from '../_select'
 import prisma from '~/prisma/db'
 import type { WalletAccountExpenditureServer } from '~/types'
 

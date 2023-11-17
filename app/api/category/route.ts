@@ -1,13 +1,9 @@
 import { type NextRequest, NextResponse } from 'next/server'
+import { categorySelectField } from './_select'
 import { catchError } from '~/utils'
 import prisma from '~/prisma/db'
 import { categorySchema } from '~/schemas'
 import type { CategoryClient, CategoryCreate } from '~/types'
-
-export const categorySelectField = {
-  id: true,
-  label: true,
-}
 
 export async function GET(_: NextRequest) {
   const data: CategoryClient[] = await prisma.category.findMany({

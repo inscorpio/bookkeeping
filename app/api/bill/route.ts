@@ -1,12 +1,12 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { subHours } from 'date-fns'
 import type { Decimal } from '@prisma/client/runtime/library'
+import { walletAccountSelectField } from '../wallet/_select'
+import { categorySelectField } from '../category/_select'
 import { catchError } from '~/utils'
 import prisma from '~/prisma/db'
 import { billCreateSchema } from '~/schemas'
 import type { BillCreate, BillGroupByDateServer, BillServer } from '~/types'
-import { categorySelectField } from '~/app/api/category/route'
-import { walletAccountSelectField } from '~/app/api/wallet/route'
 
 async function updateWalletAccout(bill: BillCreate) {
   const walletAccount = await prisma.walletAccount.findUnique({
