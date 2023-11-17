@@ -3,7 +3,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import type { z } from 'zod'
-import { requestWalletAccountCreate } from '~/api/wallet'
 import BackTo from '~/components/BackTo'
 import {
   Form,
@@ -16,9 +15,9 @@ import {
 import { Input } from '~/components/ui/input'
 import { Input as InputFix, InputProvider, Prefix } from '~/components/ui/input.fix'
 import { Container, Header, Main } from '~/components/ui/layout'
-import { toast } from '~/components/ui/use-toast'
 import { walletAccountFormSchema } from '~/schemas'
-import { showZodErrorToasts } from '~/utils'
+import { RequestUrl } from '~/types'
+import { request, showZodErrorToasts } from '~/utils'
 
 type WalletAccountForm = z.infer<typeof walletAccountFormSchema>
 
@@ -33,15 +32,11 @@ export default function Page() {
   })
 
   async function onSubmit(walletAccount: WalletAccountForm) {
-    const { success, message, errors } = await requestWalletAccountCreate({
+    await request.post(RequestUrl.wallet, {
       ...walletAccount,
       amount: Number(walletAccount.amount),
-    }) ?? {}
-    await showZodErrorToasts(errors)
-    toast({ title: message })
-    if (success) {
-      router.push('/wallets')
-    }
+    })
+    router.push('/wallets')
   }
   return (
     <>
