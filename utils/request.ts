@@ -1,7 +1,7 @@
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import axios from 'axios'
 import { toast } from '~/components/ui/use-toast'
-import type { RequestMethod, RequestModule, RequestUrl, ResponseData, ResponseDataUnknownServiceData } from '~/types'
+import type { RequestData, RequestMethod, RequestUrl, ResponseData, ResponseDataUnknownServiceData } from '~/types'
 import { showZodErrorToasts } from '~/utils'
 
 const instance = axios.create({
@@ -49,7 +49,7 @@ async function handleServerResponse(response: AxiosResponse<ResponseDataUnknownS
   }
 }
 
-interface Config<U extends RequestUrl, M extends RequestMethod> extends AxiosRequestConfig<RequestModule[U][M]['request']> {
+interface Config<U extends RequestUrl, M extends RequestMethod> extends AxiosRequestConfig<ResponseData<U, M>> {
   url: U
   method?: M
 }
@@ -59,16 +59,16 @@ async function request<U extends RequestUrl, M extends RequestMethod = 'get'>(co
   return data
 }
 
-request.get = async <U extends RequestUrl>(url: U, config?: Config<U, 'get'>) => {
-  const { data } = await instance.get<ResponseData<U, 'get'>>(url, config)
+request.get = async <U extends RequestUrl, M extends 'get'>(url: U, config?: Config<U, M>) => {
+  const { data } = await instance.get<ResponseData<U, M>>(url, config)
   const { success } = data
   if (success) {
     const { data: serviceData } = data
     return serviceData
   }
 }
-request.post = async <U extends RequestUrl>(url: U, requestData?: RequestModule[U]['post']['request'], config?: Config<U, 'post'>) => {
-  const { data } = await instance.post<ResponseData<U, 'post'>>(url, requestData, config)
+request.post = async <U extends RequestUrl, M extends 'post'>(url: U, requestData?: RequestData<U, M>, config?: Config<U, M>) => {
+  const { data } = await instance.post<ResponseData<U, M>>(url, requestData, config)
   return data
 }
 

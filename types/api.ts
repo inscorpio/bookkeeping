@@ -16,7 +16,7 @@ export enum RequestUrl {
   walletExpenditure = '/wallet/expenditure',
 }
 
-export type RequestMethod = 'get' | 'post' | undefined
+export type RequestMethod = 'get' | 'post'
 
 export interface RequestModule {
   [RequestUrl.wallet]: {
@@ -50,22 +50,27 @@ export interface RequestModule {
   }
 }
 
+type ModuleData<U, M, R> = U extends keyof RequestModule
+  ? M extends keyof RequestModule[U]
+    ? R extends keyof RequestModule[U][M]
+      ? RequestModule[U][M][R]
+      : never
+    : never
+  : never
+
+export type RequestData<U, M> = ModuleData<U, M, 'request'>
+export type ResultData<U, M> = ModuleData<U, M, 'response'>
+
 interface ResponseSuccessUnknownData<T = unknown> {
   success: true
   message: string
   data: T
 }
 
-interface ResponseSuccess<U extends RequestUrl, M extends RequestMethod> {
+interface ResponseSuccess<U, M> {
   success: true
   message: string
-  data: M extends undefined
-    ? RequestModule[U]['get']['response']
-    : M extends keyof RequestModule[U]
-      ? 'response' extends keyof RequestModule[U][M]
-        ? RequestModule[U][M]['response']
-        : unknown
-      : unknown
+  data: ResultData<U, M>
 }
 
 interface ResponseError {
@@ -75,5 +80,5 @@ interface ResponseError {
   errors?: z.ZodIssue[]
 }
 
-export type ResponseData<U extends RequestUrl, M extends RequestMethod> = ResponseSuccess<U, M> | ResponseError
+export type ResponseData<U, M> = ResponseSuccess<U, M> | ResponseError
 export type ResponseDataUnknownServiceData<T = unknown> = ResponseSuccessUnknownData<T> | ResponseError
