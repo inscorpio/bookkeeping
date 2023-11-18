@@ -5,8 +5,10 @@ import type { RequestData, RequestMethod, RequestUrl, ResponseData, ResponseData
 import { showZodErrorToasts } from '~/utils'
 
 const instance = axios.create({
-  baseURL: 'http://localhost:3000/api',
-  timeout: 10000,
+  baseURL: process.env.NODE_ENV === 'production'
+    ? 'https://moneywhere.vercel.app/api'
+    : 'http://localhost:3000/api',
+  timeout: 30_000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -40,11 +42,12 @@ async function handleServerResponse(response: AxiosResponse<ResponseDataUnknownS
   const { data } = response
   const { success, message } = data
   if (success) {
-    toast({ title: message })
+    message && toast({ title: message })
   }
   else {
-    const { errors } = data
+    const { errors, message } = data
     await showZodErrorToasts(errors)
+    message && toast({ title: message })
     return Promise.reject(response)
   }
 }
