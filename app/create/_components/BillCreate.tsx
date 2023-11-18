@@ -12,7 +12,7 @@ import { Container, Footer, Header, Main } from '~/components/ui/layout'
 import { request } from '~/utils'
 
 export default function BillCreate({ categories, walletAccounts }: { categories: CategoryClient[]; walletAccounts: WalletAccountClient[] }) {
-  let walletAccountId = walletAccounts[0].id
+  let walletAccountId = walletAccounts[0]?.id
   const [date, setDate] = useState<Date | undefined>(startOfDay(new Date()))
   const [amount, setAmount] = useState('0')
   const [selectIndex, setSelectIndex] = useState(0)
@@ -20,7 +20,7 @@ export default function BillCreate({ categories, walletAccounts }: { categories:
   const router = useRouter()
   const handleSave = async () => {
     await request.post(RequestUrl.bill, {
-      categoryId: categories[selectIndex].id,
+      categoryId: categories[selectIndex]?.id,
       walletAccountId,
       amount: +amount,
       date: date!,

@@ -54,7 +54,7 @@ export default function ActionBar({
         </li>
         <li>
           <Select
-            defaultValue={`${walletAccounts[0].id}`}
+            defaultValue={`${walletAccounts[0]?.id}`}
             onValueChange={(value) => { onWalletChange(+value) }}
           >
             <SelectTrigger className="h-auto py-1 border-none shadow-none text-xs">
