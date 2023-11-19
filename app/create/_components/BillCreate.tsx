@@ -3,7 +3,7 @@ import { startOfDay } from 'date-fns'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { RequestUrl } from '~/types'
-import type { CategoryClient, WalletAccountServer } from '~/types'
+import type { CategoryClient, WalletAccountClient } from '~/types'
 import ActionBar from '~/app/create/_components/ActionBar'
 import CategoryList from '~/app/create/_components/CategoryList'
 import KeyBoard from '~/app/create/_components/KeyBoard'
@@ -12,7 +12,7 @@ import { Input } from '~/components/ui/input'
 import { Container, Footer, Header, Main } from '~/components/ui/layout'
 import { request } from '~/utils'
 
-export default function BillCreate({ categories, walletAccounts }: { categories: CategoryClient[]; walletAccounts: WalletAccountServer[] }) {
+export default function BillCreate({ categories, walletAccounts }: { categories: CategoryClient[]; walletAccounts: WalletAccountClient[] }) {
   let walletAccountId = walletAccounts[0]?.id
   const [date, setDate] = useState<Date | undefined>(startOfDay(new Date()))
   const [amount, setAmount] = useState('0')

@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui/select'
-import type { WalletAccountServer } from '~/types'
+import type { WalletAccountClient } from '~/types'
 
 export default function ActionBar({
   date,
@@ -27,7 +27,7 @@ export default function ActionBar({
   date?: Date
   onSelect: SelectSingleEventHandler
   amount: string
-  walletAccounts: WalletAccountServer[]
+  walletAccounts: WalletAccountClient[]
   onWalletChange: (id: number) => void
 }) {
   return (
@@ -68,7 +68,7 @@ export default function ActionBar({
                     value={`${accout.id}`}
                     className="h-auto py-1 text-xs"
                   >
-                    <span>{accout.name}</span> (<span>¥:</span><span className="text-sm">{accout.amount.toNumber?.()}</span>)
+                    <span>{accout.name}</span> (<span>¥:</span><span className="text-sm">{accout.amount}</span>)
                   </SelectItem>
                 ))
               }

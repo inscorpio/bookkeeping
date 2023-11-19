@@ -7,7 +7,9 @@ export default async function CreatePage() {
       id: 'asc',
     },
   })
-  const walletAccounts = await prisma.walletAccount.findMany()
+  const serverWalletAccounts = await prisma.walletAccount.findMany()
+  const walletAccounts = serverWalletAccounts.map(v => ({ ...v, amount: v.amount.toNumber() }))
+
   return (
     <BillCreate categories={categories} walletAccounts={walletAccounts} />
   )
