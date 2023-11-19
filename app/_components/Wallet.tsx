@@ -1,10 +1,9 @@
 import Link from 'next/link'
+import { fetchWalletAccounts } from '~/actions/WalletAccount'
 import Amount from '~/components/Amount'
-import { RequestUrl } from '~/types'
-import { request } from '~/utils'
 
 export default async function Wallet() {
-  const walletAccounts = await request.get(RequestUrl.walletExpenditure) ?? []
+  const walletAccounts = await fetchWalletAccounts()
   return (
     <>
       <h2>
@@ -17,7 +16,7 @@ export default async function Wallet() {
           <div key={account.id} className="py-2 px-4 shadow rounded-md">
             <div className="flex-x-between flex-y-center pb-1 border-b border-dashed border-stone-200">
               <h4>{account.name}</h4>
-              <Amount>{account.amount}</Amount>
+              <Amount>{account.amount.toNumber()}</Amount>
             </div>
             <div className="flex-x-between mt-2">
               <div className="flex-y-center">

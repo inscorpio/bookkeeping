@@ -1,19 +1,9 @@
 import { type NextRequest, NextResponse } from 'next/server'
-import { categorySelectField } from './_select'
+import { categorySelectField } from '~/actions/Category'
 import { catchError } from '~/utils'
 import prisma from '~/prisma/db'
 import { categorySchema } from '~/schemas'
 import type { CategoryClient, CategoryCreate } from '~/types'
-
-export async function GET(_: NextRequest) {
-  const data: CategoryClient[] = await prisma.category.findMany({
-    select: categorySelectField,
-    orderBy: {
-      id: 'asc',
-    },
-  })
-  return NextResponse.json({ success: true, data }, { status: 200 })
-}
 
 export async function POST(request: NextRequest) {
   try {

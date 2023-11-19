@@ -1,16 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server'
-import { walletAccountSelectField } from './_select'
 import prisma from '~/prisma/db'
 import type { WalletAccountCreate } from '~/types'
 import { walletAccountSchema } from '~/schemas'
 import { catchError } from '~/utils'
-
-export async function GET(_: NextRequest) {
-  const data = await prisma.walletAccount.findMany({
-    select: walletAccountSelectField,
-  })
-  return NextResponse.json({ success: true, data }, { status: 200 })
-}
 
 export async function POST(request: NextRequest) {
   try {

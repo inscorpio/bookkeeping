@@ -1,13 +1,12 @@
 import { PlusIcon } from '@radix-ui/react-icons'
 import Link from 'next/link'
-import Amount from '~/components/Amount'
 import BackTo from '~/components/BackTo'
 import { Container, Header, Main } from '~/components/ui/layout'
-import { RequestUrl } from '~/types'
-import { request } from '~/utils'
+import Amount from '~/components/Amount'
+import prisma from '~/prisma/db'
 
 export default async function Page() {
-  const wallets = await request.get(RequestUrl.wallet) ?? []
+  const wallets = await prisma.walletAccount.findMany()
   return (
     <>
       <Container>
@@ -22,7 +21,7 @@ export default async function Page() {
             wallets.map(account => (
               <div key={account.id} className="flex-x-between flex-y-center p-3 rounded-md shadow">
                 <span>{account.name}</span>
-                <Amount>{account.amount}</Amount>
+                <Amount>{account.amount.toNumber()}</Amount>
               </div>
             ))
           }

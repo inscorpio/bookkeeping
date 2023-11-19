@@ -1,10 +1,13 @@
 import BillCreate from '~/app/create/_components/BillCreate'
-import { RequestUrl } from '~/types'
-import { request } from '~/utils'
+import prisma from '~/prisma/db'
 
 export default async function CreatePage() {
-  const categories = await request.get(RequestUrl.category) ?? []
-  const walletAccounts = await request.get(RequestUrl.wallet) ?? []
+  const categories = await prisma.category.findMany({
+    orderBy: {
+      id: 'asc',
+    },
+  })
+  const walletAccounts = await prisma.walletAccount.findMany()
   return (
     <BillCreate categories={categories} walletAccounts={walletAccounts} />
   )
