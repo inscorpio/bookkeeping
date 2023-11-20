@@ -1,4 +1,4 @@
-import { addDays, lastDayOfMonth, startOfMonth } from 'date-fns'
+import { addDays, lastDayOfMonth, startOfDay, startOfMonth } from 'date-fns'
 import prisma from '~/prisma/db'
 import type { WalletAccountExpenditureServer } from '~/types'
 import { getChineseDate, getStartOfToday } from '~/utils'
@@ -32,7 +32,7 @@ export async function fetchWalletAccounts() {
 }
 
 async function fetchTodayExpend(walletAccountId: number) {
-  const today = getStartOfToday()
+  const today = startOfDay(new Date())
   const tomorrow = addDays(today, 1)
 
   const res = await prisma.bill.aggregate({
@@ -52,7 +52,7 @@ async function fetchTodayExpend(walletAccountId: number) {
 }
 
 async function fetchThisMonthExpend(walletAccountId: number) {
-  const now = getChineseDate()
+  const now = new Date()
   const firstDay = startOfMonth(now)
   const lastDay = lastDayOfMonth(now)
 

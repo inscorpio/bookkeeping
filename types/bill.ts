@@ -12,12 +12,12 @@ export type BillCreate = z.infer<typeof billCreateSchema>
 export type BillClient = Pick<Bill, 'id' | 'date' | 'note'> & { amount: number } & { category: CategoryClient } & { walletAccount: WalletAccountClient }
 export type BillServer = Pick<Bill, 'id' | 'amount' | 'date' | 'note'> & { category: CategoryClient } & { walletAccount: WalletAccountServer }
 export interface BillGroupByDateClient {
-  date: string
+  date: Date
   amount: number
   bills: Omit<BillClient, 'date' | 'walletAccount'>[]
 }
 export interface BillGroupByDateServer {
-  date: string
+  date: Date
   amount: Decimal
   bills: Omit<BillServer, 'date' | 'walletAccount'>[]
 }
