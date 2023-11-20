@@ -5,6 +5,8 @@ import { Container, Header, Main } from '~/components/ui/layout'
 import Amount from '~/components/Amount'
 import prisma from '~/prisma/db'
 
+export const dynamic = 'force-dynamic'
+
 export default async function Page() {
   const wallets = await prisma.walletAccount.findMany()
   return (

@@ -5,9 +5,7 @@ import type { RequestData, RequestMethod, RequestUrl, ResponseData, ResponseData
 import { showZodErrorToasts } from '~/utils'
 
 const instance = axios.create({
-  baseURL: process.env.NODE_ENV === 'production'
-    ? 'https://moneywhere.vercel.app/api'
-    : 'http://localhost:3000/api',
+  baseURL: '/api',
   timeout: 30_000,
   headers: {
     'Content-Type': 'application/json',
