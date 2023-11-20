@@ -1,8 +1,8 @@
-import { subHours } from 'date-fns'
 import type { Decimal } from '@prisma/client/runtime/library'
 import prisma from '~/prisma/db'
 import type { BillGroupByDateServer } from '~/types'
 import { categorySelectField } from '~/actions/Category'
+import { getChineseDate } from '~/utils'
 
 export async function fetchBillGroups() {
   const groups: { date: string; amount: Decimal }[] = await prisma.$queryRaw`
@@ -25,7 +25,7 @@ export async function fetchBillGroups() {
       },
       where: {
         date: {
-          equals: subHours(new Date(date), 8),
+          equals: getChineseDate(date),
         },
       },
       orderBy: {
